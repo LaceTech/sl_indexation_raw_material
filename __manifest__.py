@@ -1,22 +1,23 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "sl_indexation_cost",
+    'name': "sl_indexation_raw_material",
 
-    'summary': """
-        Short (1 phrase/line) summary of the module's purpose, used as
-        subtitle on modules listing or apps.openerp.com""",
+    'summary': """Automatic product indexation by specific category of raw material.""",
 
     'description': """
-        Long description of module's purpose
+        Execute indexation when a purchase order is completed to update the costs of 
+        all products in a specific category.
+
+        Indexation determines the costs of the raw materials by weight, finds an average cost, 
+        and adjusts the costs of the products in a category.
+
+        Change view :
+        - Add field in category
     """,
 
-    'author': "My Company",
-    'website': "http://www.yourcompany.com",
-
-    # Categories can be used to filter modules in modules listing
-    # Check https://github.com/odoo/odoo/blob/master/odoo/addons/base/module/module_data.xml
-    # for the full list
-    'category': 'Uncategorized',
+    'author': "Mathben informatique",
+    'website': "http://mathieubenoit.ca",
+    'category': 'Warehouse',
     'version': '0.1',
 
     # any module necessary for this one to work correctly
