@@ -1,20 +1,20 @@
 # -*- coding: utf-8 -*-
 from odoo import http
 
-# class SlIndexationCost(http.Controller):
-#     @http.route('/sl_indexation_cost/sl_indexation_cost/', auth='public')
+# class SlIndexationRawMaterial(http.Controller):
+#     @http.route('/sl_indexation_raw_material/sl_indexation_raw_material/', auth='public')
 #     def index(self, **kw):
 #         return "Hello, world"
 
-#     @http.route('/sl_indexation_cost/sl_indexation_cost/objects/', auth='public')
+#     @http.route('/sl_indexation_raw_material/sl_indexation_raw_material/objects/', auth='public')
 #     def list(self, **kw):
-#         return http.request.render('sl_indexation_cost.listing', {
-#             'root': '/sl_indexation_cost/sl_indexation_cost',
-#             'objects': http.request.env['sl_indexation_cost.sl_indexation_cost'].search([]),
+#         return http.request.render('sl_indexation_raw_material.listing', {
+#             'root': '/sl_indexation_raw_material/sl_indexation_raw_material',
+#             'objects': http.request.env['sl_indexation_raw_material.sl_indexation_raw_material'].search([]),
 #         })
 
-#     @http.route('/sl_indexation_cost/sl_indexation_cost/objects/<model("sl_indexation_cost.sl_indexation_cost"):obj>/', auth='public')
+#     @http.route('/sl_indexation_raw_material/sl_indexation_raw_material/objects/<model("sl_indexation_raw_material.sl_indexation_raw_material"):obj>/', auth='public')
 #     def object(self, obj, **kw):
-#         return http.request.render('sl_indexation_cost.object', {
+#         return http.request.render('sl_indexation_raw_material.object', {
 #             'object': obj
 #         })

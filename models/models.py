@@ -2,8 +2,9 @@
 
 from odoo import models, fields, api
 
-# class sl_indexation_cost(models.Model):
-#     _name = 'sl_indexation_cost.sl_indexation_cost'
+
+class sl_indexation_raw_material(models.Model):
+    _name = 'sl_indexation_raw_material.sl_indexation_raw_material'
 
 #     name = fields.Char()
 #     value = fields.Integer()

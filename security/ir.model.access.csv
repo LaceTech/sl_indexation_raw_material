@@ -1,2 +1,2 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_sl_indexation_cost_sl_indexation_cost,sl_indexation_cost.sl_indexation_cost,model_sl_indexation_cost_sl_indexation_cost,,1,0,0,0
+access_sl_indexation_raw_material_sl_indexation_raw_material,sl_indexation_raw_material.sl_indexation_raw_material,model_sl_indexation_raw_material_sl_indexation_raw_material,,1,0,0,0

@@ -15,10 +15,12 @@
         - Add field in category
     """,
 
-    'author': "Mathben informatique",
+    'author': "Mathieu Benoit",
+    'company': "Mathben informatique",
     'website': "http://mathieubenoit.ca",
     'category': 'Warehouse',
     'version': '0.1',
+    'license': 'LGPL-3',
 
     # any module necessary for this one to work correctly
     'depends': ['base'],
@@ -33,4 +35,7 @@
     'demo': [
         'demo/demo.xml',
     ],
+    'application': True,
+    'installable': True,
+    'auto_install': False,
 }
