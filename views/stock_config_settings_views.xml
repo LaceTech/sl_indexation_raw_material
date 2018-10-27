@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- component into view_stock_config_settings -->
+        <record id="view_stock_config_settings_inherit_indexation_raw_material" model="ir.ui.view">
+            <field name="name">stock.config.settings.inherit.indexation.raw.material</field>
+            <field name="model">stock.config.settings</field>
+            <field name="inherit_id" ref="stock.view_stock_config_settings"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@name='traceability']" position="after">
+                    <group string="Indexation Raw Material">
+                        <field name="debug_raw_material_execution" widget="radio"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
