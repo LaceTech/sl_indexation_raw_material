@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="sl_indexation_raw_material_rule" model="ir.rule">
+            <field name="name">Indexation Raw Material</field>
+            <field name="model_id" ref="model_sl_indexation_raw_material"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">['|',('company_id','=',user.company_id.id),('company_id','=',False)]</field>
+        </record>
+
+    </data>
+</odoo>

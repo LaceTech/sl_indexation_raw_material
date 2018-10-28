@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="indexation_raw_material_tree_view" model="ir.ui.view">
+            <field name="name">indexation.raw_material.tree</field>
+            <field name="model">indexation.raw_material</field>
+            <field name="arch" type="xml">
+                <tree string="Indexation Raw Material">
+                    <field name="create_date"/>
+                    <field name="write_date"/>
+                    <field name="purchase_id"/>
+                    <field name="indexation_value"/>
+                    <field name="active"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="indexation_raw_material_form_view" model="ir.ui.view">
+            <field name="name">indexation.raw_material.form</field>
+            <field name="model">indexation.raw_material</field>
+            <field name="arch" type="xml">
+                <form string="Indexation Raw Material">
+                </form>
+            </field>
+        </record>
+
+        <record id="indexation_raw_material_form_action" model="ir.actions.act_window">
+            <field name="name">Indexation Raw Material</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">indexation.raw_material</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_type">form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to add a new indexation raw material.
+                </p>
+                <p>
+                    A value is automatic added when an purchase order is done.
+                </p>
+            </field>
+        </record>
+
+        <menuitem
+                id="menu_stock_indexation_raw_material" name="Indexation Raw Material"
+                action="indexation_raw_material_form_action" parent="stock.menu_stock_config_settings" sequence="10"/>
+    </data>
+</odoo>
