@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!--  Wizard run algorithm -->
+        <record id="view_compute_algo_indexation_raw_material_wizard" model="ir.ui.view">
+            <field name="name">Compute indexation</field>
+            <field name="model">indexation.raw_material.compute.all</field>
+            <field name="arch" type="xml">
+                <form string="Compute indexation raw material">
+                    <p>
+                        Compute all indexation raw material in the background.
+                    </p>
+                    <footer>
+                        <button name="compute_indexation_raw_material" string="Compute indexation" type="object"
+                                class="btn-primary"/>
+                        <button string="Cancel" class="btn-default" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_compute_indexation_raw_material" model="ir.actions.act_window">
+            <field name="name">Compute indexation</field>
+            <field name="res_model">indexation.raw_material.compute.all</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+    </data>
+</odoo>

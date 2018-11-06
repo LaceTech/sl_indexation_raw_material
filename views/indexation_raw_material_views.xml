@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
+
         <!-- Form of indexation raw material lines -->
         <record model="ir.ui.view" id="indexation_raw_material_lines_tree_view">
             <field name="name">indexation.raw_material.lines.tree</field>
@@ -88,79 +89,24 @@
             </field>
         </record>
 
-        <!--  Wizard run algorithm -->
-        <record id="view_compute_algo_indexation_raw_material_wizard" model="ir.ui.view">
-            <field name="name">Compute indexation</field>
-            <field name="model">indexation.raw_material.compute.all</field>
-            <field name="arch" type="xml">
-                <form string="Compute indexation raw material">
-                    <p>
-                        Compute all indexation raw material in the background.
-                    </p>
-                    <footer>
-                        <button name="compute_indexation_raw_material" string="Compute indexation" type="object"
-                                class="btn-primary"/>
-                        <button string="Cancel" class="btn-default" special="cancel"/>
-                    </footer>
-                </form>
-            </field>
-        </record>
-
-        <record id="action_compute_indexation_raw_material" model="ir.actions.act_window">
-            <field name="name">Compute indexation</field>
-            <field name="res_model">indexation.raw_material.compute.all</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">form</field>
-            <field name="target">new</field>
-        </record>
-
-        <!-- Wizard clean indexation and log -->
-        <record id="view_clean_indexation_raw_material_wizard" model="ir.ui.view">
-            <field name="name">Clean indexation</field>
-            <field name="model">indexation.raw_material.clean.all</field>
-            <field name="arch" type="xml">
-                <form string="Clean indexation raw material">
-                    <p>
-                        Clean indexation and log of raw material.
-                    </p>
-                    <footer>
-                        <button name="remove_disabled_indexation" string="Remove disabled indexation" type="object"
-                                class="btn-warning"/>
-                        <button name="clean_all_indexation" string="Clean all indexation" type="object"
-                                class="btn-danger"/>
-                        <button name="clean_all_log" string="Clean all log" type="object"
-                                class="btn-danger"/>
-                        <button string="Cancel" class="btn-default" special="cancel"/>
-                    </footer>
-                </form>
-            </field>
-        </record>
-
-        <record id="action_clean_indexation_raw_material" model="ir.actions.act_window">
-            <field name="name">Clean indexation</field>
-            <field name="res_model">indexation.raw_material.clean.all</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">form</field>
-            <field name="target">new</field>
-        </record>
-
         <!-- Action button -->
         <record id="action_enable_indexation_raw_material_lines" model="ir.actions.server">
-            <field name="name">Enable indexation Raw Material on specific line</field>
+            <field name="name">Enable line(s)</field>
             <field name="model_id" ref="model_indexation_raw_material_lines"/>
             <field name="code">model.enable_indexation_raw_material_lines(context)</field>
         </record>
 
         <record id="action_disable_indexation_raw_material_lines" model="ir.actions.server">
-            <field name="name">Disable indexation Raw Material on specific line</field>
+            <field name="name">Disable line(s)</field>
             <field name="model_id" ref="model_indexation_raw_material_lines"/>
             <field name="code">model.disable_indexation_raw_material_lines(context)</field>
         </record>
 
-        <record id="action_update_indexation_raw_material_lines" model="ir.actions.server">
-            <field name="name">Update indexation Raw Material on specific line</field>
+        <record id="action_compute_indexation_raw_material_lines" model="ir.actions.server">
+            <field name="name">Compute line(s)</field>
             <field name="model_id" ref="model_indexation_raw_material_lines"/>
-            <field name="code">model.update_indexation_raw_material_lines()</field>
+            <field name="code">model.compute_indexation_raw_material_lines()</field>
         </record>
+
     </data>
 </odoo>

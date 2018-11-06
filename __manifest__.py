@@ -13,6 +13,8 @@
 
         Change view :
         - Add field in category
+        TO COMPLETE
+        In Development
     """,
 
     'author': "Mathieu Benoit",
@@ -32,6 +34,8 @@
         'views/indexation_raw_material_views.xml',
         'views/stock_config_settings_views.xml',
         'views/stock_menu_views.xml',
+        'wizard/compute_indexation_raw_material_views.xml',
+        'wizard/clean_indexation_raw_material_views.xml',
     ],
     # only loaded in demonstration mode
     'demo': [
