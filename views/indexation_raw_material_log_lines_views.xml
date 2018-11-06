@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Form of indexation raw material log lines -->
+        <record model="ir.ui.view" id="indexation_raw_material_log_lines_tree_view">
+            <field name="name">indexation.raw_material.log.lines.tree</field>
+            <field name="model">indexation.raw_material.log.lines</field>
+            <field name="arch" type="xml">
+                <tree string="Indexation Raw Material log Lines" create="false" edit="false"
+                      decoration-info="level==0" decoration-muted="level==1"
+                      decoration-success="level==2" decoration-warning="level==3"
+                      decoration-danger="level==4">
+                    <field name="create_date"/>
+                    <field name="write_uid"/>
+                    <field name="message"/>
+                    <field name="purchase_id"/>
+                    <field name="product_id"/>
+                    <field name="category_id"/>
+                    <field name="level" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="indexation_raw_material_log_lines_form_view">
+            <field name="name">indexation.raw_material.log.lines.form</field>
+            <field name="model">indexation.raw_material.log.lines</field>
+            <field name="arch" type="xml">
+                <form string="Indexation Raw Material log" create="false" edit="false">
+                    <group>
+                        <field name="message"/>
+                        <field name="purchase_id"/>
+                        <field name="product_id"/>
+                        <field name="category_id"/>
+                        <field name="level"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_indexation_raw_material_log_lines_form">
+            <field name="name">Indexation Raw Material</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">indexation.raw_material.log.lines</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Empty log.
+                </p>
+                <p>
+                    A value is automatic added when execute algorithm of indexation raw material.
+                </p>
+            </field>
+        </record>
+
+    </data>
+</odoo>

@@ -32,11 +32,13 @@
         # 'security/security.xml',
         'security/ir.model.access.csv',
         'views/indexation_raw_material_views.xml',
+        'views/indexation_raw_material_lines_views.xml',
+        'views/indexation_raw_material_log_lines_views.xml',
         'views/product_views.xml',
         'views/stock_config_settings_views.xml',
-        'views/stock_menu_views.xml',
         'wizard/compute_indexation_raw_material_views.xml',
         'wizard/clean_indexation_raw_material_views.xml',
+        'views/stock_menu_views.xml',
     ],
     # only loaded in demonstration mode
     'demo': [

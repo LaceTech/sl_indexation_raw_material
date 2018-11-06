@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Form of indexation raw material lines -->
+        <record model="ir.ui.view" id="indexation_raw_material_lines_tree_view">
+            <field name="name">indexation.raw_material.lines.tree</field>
+            <field name="model">indexation.raw_material.lines</field>
+            <field name="arch" type="xml">
+                <tree string="Indexation Raw Material Lines">
+                    <field name="create_date"/>
+                    <field name="write_date"/>
+                    <field name="write_uid"/>
+                    <field name="purchase_id"/>
+                    <field name="indexation_value"/>
+                    <field name="field_active"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="indexation_raw_material_lines_form_view">
+            <field name="name">indexation.raw_material.lines.form</field>
+            <field name="model">indexation.raw_material.lines</field>
+            <field name="arch" type="xml">
+                <form string="Indexation Raw Material line">
+                    <group>
+                        <field name="purchase_id"/>
+                        <field name="indexation_value"/>
+                        <field name="field_active"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_indexation_raw_material_lines_form">
+            <field name="name">Indexation Raw Material</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">indexation.raw_material.lines</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to add a new line of indexation value raw material.
+                </p>
+                <p>
+                    A value is automatic added when an purchase order is done.
+                </p>
+            </field>
+        </record>
+
+        <!-- Action button -->
+        <record id="action_enable_indexation_raw_material_lines" model="ir.actions.server">
+            <field name="name">Enable line(s)</field>
+            <field name="model_id" ref="model_indexation_raw_material_lines"/>
+            <field name="code">model.enable_indexation_raw_material_lines(context)</field>
+        </record>
+
+        <record id="action_disable_indexation_raw_material_lines" model="ir.actions.server">
+            <field name="name">Disable line(s)</field>
+            <field name="model_id" ref="model_indexation_raw_material_lines"/>
+            <field name="code">model.disable_indexation_raw_material_lines(context)</field>
+        </record>
+
+        <record id="action_compute_indexation_raw_material_lines" model="ir.actions.server">
+            <field name="name">Compute line(s)</field>
+            <field name="model_id" ref="model_indexation_raw_material_lines"/>
+            <field name="code">model.compute_indexation_raw_material_lines()</field>
+        </record>
+
+    </data>
+</odoo>
