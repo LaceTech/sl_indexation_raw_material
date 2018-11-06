@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <record model="ir.ui.view" id="indexation_raw_material_tree_view">
-            <field name="name">indexation.raw_material.tree</field>
-            <field name="model">indexation.raw_material</field>
+        <!-- Form of indexation raw material lines -->
+        <record model="ir.ui.view" id="indexation_raw_material_lines_tree_view">
+            <field name="name">indexation.raw_material.lines.tree</field>
+            <field name="model">indexation.raw_material.lines</field>
             <field name="arch" type="xml">
-                <tree string="Indexation Raw Material">
+                <tree string="Indexation Raw Material Lines">
                     <field name="create_date"/>
                     <field name="write_date"/>
                     <field name="purchase_id"/>
@@ -15,11 +16,11 @@
             </field>
         </record>
 
-        <record model="ir.ui.view" id="indexation_raw_material_form_view">
-            <field name="name">indexation.raw_material.form</field>
-            <field name="model">indexation.raw_material</field>
+        <record model="ir.ui.view" id="indexation_raw_material_lines_form_view">
+            <field name="name">indexation.raw_material.lines.form</field>
+            <field name="model">indexation.raw_material.lines</field>
             <field name="arch" type="xml">
-                <form string="Indexation Raw Material">
+                <form string="Indexation Raw Material line">
                     <group>
                         <field name="purchase_id"/>
                         <field name="indexation_value"/>
@@ -29,15 +30,15 @@
             </field>
         </record>
 
-        <record model="ir.actions.act_window" id="indexation_raw_material_form_action">
+        <record model="ir.actions.act_window" id="action_indexation_raw_material_lines_form">
             <field name="name">Indexation Raw Material</field>
             <field name="type">ir.actions.act_window</field>
-            <field name="res_model">indexation.raw_material</field>
+            <field name="res_model">indexation.raw_material.lines</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">
-                    Click to add a new indexation raw material.
+                    Click to add a new line of indexation value raw material.
                 </p>
                 <p>
                     A value is automatic added when an purchase order is done.
@@ -45,8 +46,45 @@
             </field>
         </record>
 
-        <menuitem
-                id="menu_stock_indexation_raw_material" name="Indexation Raw Material"
-                action="indexation_raw_material_form_action" parent="stock.menu_stock_config_settings" groups="base.group_user" sequence="2"/>
+        <!-- Form of indexation raw material log lines -->
+        <record model="ir.ui.view" id="indexation_raw_material_log_lines_tree_view">
+            <field name="name">indexation.raw_material.log.lines.tree</field>
+            <field name="model">indexation.raw_material.log.lines</field>
+            <field name="arch" type="xml">
+                <tree string="Indexation Raw Material log Lines">
+                    <field name="create_date"/>
+                    <field name="write_date"/>
+                    <field name="message"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="indexation_raw_material_log_lines_form_view">
+            <field name="name">indexation.raw_material.log.lines.form</field>
+            <field name="model">indexation.raw_material.log.lines</field>
+            <field name="arch" type="xml">
+                <form string="Indexation Raw Material log">
+                    <group>
+                        <field name="message"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_indexation_raw_material_log_lines_form">
+            <field name="name">Indexation Raw Material</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">indexation.raw_material.log.lines</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Empty log.
+                </p>
+                <p>
+                    A value is automatic added when execute algorithm of indexation raw material.
+                </p>
+            </field>
+        </record>
     </data>
 </odoo>

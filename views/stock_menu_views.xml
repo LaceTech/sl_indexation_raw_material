@@ -1,8 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!--
+
+    <menuitem id="menu_stock_raw_material_indexation" name="Raw Material Indexation" parent="stock.menu_stock_root"
+              groups="base.group_user" sequence="10"/>
+
     <menuitem
-            id="menu_stock_indexation_raw_material" name="Indexation Raw Material"
-            parent="stock.menu_stock_config_settings" sequence="10"/>
-            -->
+            id="menu_stock_indexation_raw_material_lines" name="Indexation lines"
+            action="action_indexation_raw_material_lines_form" parent="menu_stock_raw_material_indexation"
+            groups="base.group_user" sequence="1"/>
+
+    <menuitem
+            id="menu_stock_indexation_raw_material_log_lines" name="Indexation log"
+            action="action_indexation_raw_material_log_lines_form" parent="menu_stock_raw_material_indexation"
+            groups="base.group_user" sequence="2"/>
 </odoo>
