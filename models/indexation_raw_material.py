@@ -3,6 +3,7 @@
 from odoo import api, fields, tools, models
 import logging
 import threading
+import random
 
 _logger = logging.getLogger(__name__)
 
@@ -18,6 +19,16 @@ class IndexationRawMaterialLines(models.Model):
 
     # _order = "purchase_order_id"
 
+    @api.multi
+    def enable_indexation_raw_material_lines(self, cxt):
+        for record in self.browse(cxt['active_ids']):
+            record.field_active = True
+
+    @api.multi
+    def disable_indexation_raw_material_lines(self, cxt):
+        for record in self.browse(cxt['active_ids']):
+            record.field_active = False
+
     def update_indexation_raw_material_lines(self):
         try:
             _logger.info('algo success')
@@ -26,8 +37,8 @@ class IndexationRawMaterialLines(models.Model):
 
     purchase_id = fields.Many2one('purchase.order', 'Purchase Order')
     indexation_value = fields.Float('Indexation Value', default=0., required=True)
-    active = fields.Boolean('Active', default=True,
-                            help="Uncheck the active field to disable an indexation value without deleting it.")
+    field_active = fields.Boolean('Active', default=True,
+                                  help="Uncheck the active field to disable an indexation value without deleting it.")
 
 
 class IndexationRawMaterialLogLines(models.Model):
@@ -37,7 +48,7 @@ class IndexationRawMaterialLogLines(models.Model):
     message = fields.Text()
 
 
-class IndexationRawMaterialWizard(models.TransientModel):
+class IndexationRawMaterialComputeWizard(models.TransientModel):
     _name = 'indexation.raw_material.compute.all'
     _description = 'Compute all indexation of raw material'
 
@@ -49,8 +60,9 @@ class IndexationRawMaterialWizard(models.TransientModel):
             new_cr = self.pool.cursor()
             self = self.with_env(self.env(cr=new_cr))
 
-            self.env['indexation.raw_material.log.lines'].create({'message': "test"})
-            self.env['indexation.raw_material.lines'].create({'indexation_value': 0.5})
+            for i in range(20):
+                self.env['indexation.raw_material.log.lines'].create({'message': "test"})
+                self.env['indexation.raw_material.lines'].create({'indexation_value': random.uniform(0.4, 10.2)})
 
             new_cr.commit()
             new_cr.close()
@@ -60,4 +72,25 @@ class IndexationRawMaterialWizard(models.TransientModel):
     def compute_indexation_raw_material(self):
         threaded_compute = threading.Thread(target=self._algo_indexation_raw_material_all, args=())
         threaded_compute.start()
+        # self._algo_indexation_raw_material_all()
+        return {'type': 'ir.actions.act_window_close'}
+
+
+class IndexationRawMaterialCleanWizard(models.TransientModel):
+    _name = 'indexation.raw_material.clean.all'
+    _description = 'Clean all indexation of raw material'
+
+    @api.multi
+    def remove_disabled_indexation(self):
+        self.env['indexation.raw_material.lines'].search([('field_active', '=', False)]).unlink()
+        return {'type': 'ir.actions.act_window_close'}
+
+    @api.multi
+    def clean_all_indexation(self):
+        self.env['indexation.raw_material.lines'].search([]).unlink()
+        return {'type': 'ir.actions.act_window_close'}
+
+    @api.multi
+    def clean_all_log(self):
+        self.env['indexation.raw_material.log.lines'].search([]).unlink()
         return {'type': 'ir.actions.act_window_close'}

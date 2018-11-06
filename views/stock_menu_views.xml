@@ -17,4 +17,8 @@
     <menuitem id="menu_stock_indexation_raw_material_compute_all" action="action_compute_indexation_raw_material"
               parent="menu_stock_indexation_raw_material" groups="base.group_user"
               sequence="3"/>
+
+    <menuitem id="menu_stock_indexation_raw_material_clean_all" action="action_clean_indexation_raw_material"
+              parent="menu_stock_indexation_raw_material" groups="base.group_user"
+              sequence="4"/>
 </odoo>
