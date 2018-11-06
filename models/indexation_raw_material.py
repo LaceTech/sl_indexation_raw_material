@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 
 from odoo import api, fields, tools, models, _
+import logging
+
+_logger = logging.getLogger(__name__)
 
 
 class IndexationRawMaterial(models.Model):
@@ -17,8 +20,15 @@ class IndexationRawMaterialLogLines(models.Model):
 
 class IndexationRawMaterialLines(models.Model):
     _name = 'indexation.raw_material.lines'
-    _description = 'Lines of each value of indexation data about raw material'
+    _description = 'Raw material indexation lines'
+
     # _order = "purchase_order_id"
+
+    def update_indexation_raw_material_lines(self):
+        try:
+            _logger.info('algo success')
+        except:
+            _logger.error('algo failed')
 
     purchase_id = fields.Many2one('purchase.order', 'Purchase Order')
     indexation_value = fields.Float('Indexation Value', default=0., required=True)
