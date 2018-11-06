@@ -25,13 +25,14 @@
     'license': 'LGPL-3',
 
     # any module necessary for this one to work correctly
-    'depends': ['base', 'purchase', 'product'],
+    'depends': ['base', 'purchase', 'product', 'stock'],
 
     # always loaded
     'data': [
         # 'security/security.xml',
         'security/ir.model.access.csv',
         'views/indexation_raw_material_views.xml',
+        'views/product_views.xml',
         'views/stock_config_settings_views.xml',
         'views/stock_menu_views.xml',
         'wizard/compute_indexation_raw_material_views.xml',
