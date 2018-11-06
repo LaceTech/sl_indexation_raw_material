@@ -13,4 +13,8 @@
             id="menu_stock_indexation_raw_material_log_lines" name="Indexation log"
             action="action_indexation_raw_material_log_lines_form" parent="menu_stock_indexation_raw_material"
             groups="base.group_user" sequence="2"/>
+
+    <menuitem id="menu_stock_indexation_raw_material_compute_all" action="action_compute_indexation_raw_material"
+              parent="menu_stock_indexation_raw_material" groups="base.group_user"
+              sequence="3"/>
 </odoo>

@@ -51,7 +51,7 @@
             <field name="name">indexation.raw_material.log.lines.tree</field>
             <field name="model">indexation.raw_material.log.lines</field>
             <field name="arch" type="xml">
-                <tree string="Indexation Raw Material log Lines">
+                <tree string="Indexation Raw Material log Lines" create="false" edit="false">
                     <field name="create_date"/>
                     <field name="write_date"/>
                     <field name="message"/>
@@ -63,7 +63,7 @@
             <field name="name">indexation.raw_material.log.lines.form</field>
             <field name="model">indexation.raw_material.log.lines</field>
             <field name="arch" type="xml">
-                <form string="Indexation Raw Material log">
+                <form string="Indexation Raw Material log" create="false" edit="false">
                     <group>
                         <field name="message"/>
                     </group>
@@ -85,6 +85,32 @@
                     A value is automatic added when execute algorithm of indexation raw material.
                 </p>
             </field>
+        </record>
+
+        <!--  Wizard run algorithm -->
+        <record id="view_compute_algo_indexation_raw_material_wizard" model="ir.ui.view">
+            <field name="name">Run indexation</field>
+            <field name="model">indexation.raw_material.compute.all</field>
+            <field name="arch" type="xml">
+                <form string="Compute indexation raw material">
+                    <p>
+                        Compute all indexation raw material in the background.
+                    </p>
+                    <footer>
+                        <button name="compute_indexation_raw_material" string="Compute indexation" type="object"
+                                class="btn-primary"/>
+                        <button string="Cancel" class="btn-default" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_compute_indexation_raw_material" model="ir.actions.act_window">
+            <field name="name">Compute indexation</field>
+            <field name="res_model">indexation.raw_material.compute.all</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
         </record>
 
         <!-- Action button -->
