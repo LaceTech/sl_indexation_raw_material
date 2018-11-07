@@ -20,5 +20,12 @@
             </field>
         </record>
 
+        <!-- Action button -->
+        <record id="action_apply_indexation_raw_material_on_product_category" model="ir.actions.server">
+            <field name="name">Apply indexation</field>
+            <field name="model_id" ref="model_product_category"/>
+            <field name="code">model.apply_indexation_raw_material_on_product_category(context)</field>
+        </record>
+
     </data>
 </odoo>

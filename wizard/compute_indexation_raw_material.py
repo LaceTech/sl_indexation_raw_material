@@ -56,11 +56,9 @@ class IndexationRawMaterialComputeWizard(models.TransientModel):
             new_cr = self.pool.cursor()
             self = self.with_env(self.env(cr=new_cr))
 
-            self.env['indexation.raw_material'].apply_indexation()
-
-            # for i in range(20):
-            #     self.env['indexation.raw_material.log.lines'].create({'message': "test"})
-            #     self.env['indexation.raw_material.lines'].create({'indexation_value': random.uniform(0.4, 10.2)})
+            lst_category = self.env['product.category'].search([('enable_indexation_raw_material', '=', True)])
+            for category in lst_category:
+                self.env['indexation.raw_material'].apply_indexation(category)
 
             new_cr.commit()
             new_cr.close()

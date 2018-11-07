@@ -36,3 +36,8 @@ class ProductCategory(models.Model):
                 record.average_indexation = sum_indexation / len_indexation
             else:
                 record.average_indexation = 0.
+
+    @api.multi
+    def apply_indexation_raw_material_on_product_category(self, cxt):
+        for record in self.browse(cxt['active_ids']):
+            self.env['indexation.raw_material'].apply_indexation(category_id=record)

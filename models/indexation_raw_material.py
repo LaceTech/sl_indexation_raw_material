@@ -49,6 +49,65 @@ class IndexationRawMaterial(models.Model):
         self._calcul_indexation(po, dct_category_to_compute, indexation_raw_material_line=indexation_raw_material_line)
 
     @api.multi
+    def apply_indexation(self, category_id=None):
+        """Update all product cost with last indexation"""
+        if category_id is None:
+            # Create a warning
+            msg = {'message': "Cannot apply indexation, product category is empty.", 'level': 3}
+            self.env['indexation.raw_material.log.lines'].create(msg)
+            _logger.warning(msg)
+            return
+
+        if not category_id.enable_indexation_raw_material:
+            # Create a warning
+            msg = {'message': "Cannot apply indexation when the indexation is disable."
+                              "Check option 'enable_indexation_raw_material' in category.",
+                   'category_id': category_id.id, 'level': 3}
+            self.env['indexation.raw_material.log.lines'].create(msg)
+            _logger.warning(msg)
+            return
+
+        indexation = category_id.average_indexation
+        if indexation == 0.:
+            # Create a warning
+            msg = {'message': "Ignore to apply indexation when the indexation is 0.",
+                   'category_id': category_id.id, 'level': 3}
+            self.env['indexation.raw_material.log.lines'].create(msg)
+            _logger.warning(msg)
+            return
+
+        lst_child_product = self.env['product.template'].search(
+            [('categ_id', '=', category_id.id), ('active', '=', True)])
+
+        # For information, find last indexation to understand the new difference
+        total_item_old_indexation = 0
+        sum_item_old_indexation = 0
+        for product in lst_child_product:
+            if product.weight != 0:
+                total_item_old_indexation += 1
+                sum_item_old_indexation += product.standard_price / product.weight
+
+            # Update new price
+            product.standard_price = product.weight * indexation
+
+        old_indexation = 0
+        if total_item_old_indexation:
+            old_indexation = sum_item_old_indexation / total_item_old_indexation
+
+        if not lst_child_product:
+            # Create a warning
+            msg = {'message': "Cannot apply indexation when list of product is empty of category.",
+                   'category_id': category_id.id, 'level': 3}
+            self.env['indexation.raw_material.log.lines'].create(msg)
+            _logger.warning(msg)
+            return
+        else:
+            msg = {'message': "Apply %s indexation on %s product of category, old indexation %s." % (
+                indexation, total_item_old_indexation, old_indexation), 'category_id': category_id.id, 'level': 2}
+            self.env['indexation.raw_material.log.lines'].create(msg)
+            _logger.info(msg)
+
+    @api.multi
     def _generate_dct_to_compute(self, po, indexation_raw_material_line=None):
         dct_category_to_compute = defaultdict(list)
         # Fill dct_category_to_compute
@@ -127,8 +186,8 @@ class IndexationRawMaterial(models.Model):
 
                 if indexation_raw_material_line:
                     # Check if value change
-                    old_value = indexation_raw_material_line.indexation_value
-                    has_update = old_value != new_indexation
+                    old_indexation = indexation_raw_material_line.indexation_value
+                    has_update = not abs(new_indexation - old_indexation) < 0.00000001
 
                     # Update the indexation
                     indexation_raw_material_line.indexation_value = new_indexation
@@ -138,35 +197,35 @@ class IndexationRawMaterial(models.Model):
                     indexation_id = indexation_raw_material_line
 
                     if has_update:
-                        _logger.info(
-                            "Update new indexation_raw_material_line. po: %s, "
-                            "old indexation_value: %s, new indexation_value: %s, category: %s." % (
-                                po.id, old_value, new_indexation, category_id.id))
+                        # Create a log
+                        msg = {
+                            'message': 'Update indexation %s, old indexation %s' % (new_indexation, old_indexation),
+                            'category_id': category_id.id, 'indexation_line': indexation_id.id, 'purchase_id': po.id,
+                            'level': 2}
+                        self.env['indexation.raw_material.log.lines'].create(msg)
+                        _logger.info(msg)
                     else:
-                        _logger.info("No update on indexation_raw_material_line. po: %s, indexation_value: %s, "
-                                     "category: %s." % (po.id, new_indexation, category_id.id))
+                        # Create a log
+                        msg = {
+                            'message': 'No update on indexation_raw_material_line. Actual value: %s' % new_indexation,
+                            'category_id': category_id.id, 'indexation_line': indexation_id.id, 'purchase_id': po.id,
+                            'level': 2}
+                        self.env['indexation.raw_material.log.lines'].create(msg)
+                        _logger.info(msg)
 
                 else:
                     # Create a new indexation
                     indexation = {'purchase_id': po.id, 'indexation_value': new_indexation, 'field_enable': True,
                                   'category_id': category_id.id}
                     indexation_id = self.env['indexation.raw_material.lines'].create(indexation)
-                    _logger.info(
-                        "Create new indexation_raw_material_line. po: %s, indexation_value: %s, category: %s." % (
-                            po.id, new_indexation, category_id.id))
-
-                # Create a log
-                msg = {'message': "Find %s indexation." % new_indexation, 'category_id': category_id.id,
-                       'indexation_line': indexation_id.id, 'purchase_id': po.id, 'level': 2}
-                self.env['indexation.raw_material.log.lines'].create(msg)
+                    # Create a log
+                    msg = {'message': 'Create new indexation: %s' % new_indexation, 'category_id': category_id.id,
+                           'indexation_line': indexation_id.id, 'purchase_id': po.id, 'level': 2}
+                    self.env['indexation.raw_material.log.lines'].create(msg)
+                    _logger.info(msg)
             else:
                 # Create a warning
                 msg = {'message': "Cannot compute indexation, item are empty. Check associated error.",
                        'category_id': category_id.id, 'purchase_id': po.id, 'level': 3}
                 self.env['indexation.raw_material.log.lines'].create(msg)
                 _logger.warning(msg)
-
-    @api.multi
-    def apply_indexation(self):
-        """Update all product cost with last indexation"""
-        _logger.info("Apply indexation")
