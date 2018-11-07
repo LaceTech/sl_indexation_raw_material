@@ -22,23 +22,38 @@ class IndexationRawMaterial(models.Model):
         self.apply_indexation()
 
     @api.multi
-    def compute_indexation(self, lst_po=[], indexation_raw_material_line=None):
+    def compute_indexation(self, po=None, indexation_raw_material_line=None):
         """
         Update all product price in different category.
-        :param lst_po: list of purchase order
+        :param po: purchase order to find indexation
         :param indexation_raw_material_line: if not None, update this variable instead to create a new one
         :return: null
         """
+        if po is None:
+            # Create a warning
+            msg = {'message': "Cannot compute indexation, purchase order is empty.", 'level': 3}
+            if indexation_raw_material_line is not None:
+                msg["indexation_line"] = indexation_raw_material_line.id
+            self.env['indexation.raw_material.log.lines'].create(msg)
+            return
+
         dct_category_to_compute = defaultdict(list)
         dct_category_result_price = defaultdict(float)
         # Fill dct_category_to_compute
         # Search order_line with product of right category to compute
-        for po in lst_po:
-            for element in po.order_line:
-                product_id = element.product_id
-                categ_id = product_id.categ_id
-                if categ_id.enable_indexation_raw_material:
-                    dct_category_to_compute[categ_id].append(element)
+        for element in po.order_line:
+            product_id = element.product_id
+            categ_id = product_id.categ_id
+            if categ_id.enable_indexation_raw_material:
+                dct_category_to_compute[categ_id].append(element)
+
+        if not dct_category_to_compute:
+            # Create a warning
+            msg = {'message': "Cannot compute indexation, no purchase order line.", 'purchase_id': po.id, 'level': 3}
+            if indexation_raw_material_line is not None:
+                msg["indexation_line"] = indexation_raw_material_line.id
+            self.env['indexation.raw_material.log.lines'].create(msg)
+            return
 
         # Compute dct_category
         for categ_id, lst_order_line in dct_category_to_compute.items():
@@ -70,10 +85,12 @@ class IndexationRawMaterial(models.Model):
                 if indexation_raw_material_line:
                     # Update the indexation
                     indexation_raw_material_line.indexation_value = new_indexation
+                    indexation_raw_material_line.category_id = categ_id
                     indexation_id = indexation_raw_material_line
                 else:
                     # Create a new indexation
-                    indexation = {'purchase_id': po.id, 'indexation_value': new_indexation, 'field_active': True}
+                    indexation = {'purchase_id': po.id, 'indexation_value': new_indexation, 'field_enable': True,
+                                  'category_id': categ_id}
                     indexation_id = self.env['indexation.raw_material.lines'].create(indexation)
 
                 # Create a log
@@ -81,7 +98,7 @@ class IndexationRawMaterial(models.Model):
                        'indexation_line': indexation_id.id, 'purchase_id': po.id, 'level': 2}
                 self.env['indexation.raw_material.log.lines'].create(msg)
             else:
-                # Create an error
+                # Create a warning
                 msg = {'message': "Cannot compute indexation, item are empty. Check associated error.",
                        'category_id': categ_id.id, 'purchase_id': po.id, 'level': 3}
                 self.env['indexation.raw_material.log.lines'].create(msg)

@@ -12,7 +12,7 @@ class IndexationRawMaterialCleanWizard(models.TransientModel):
 
     @api.multi
     def remove_disabled_indexation(self):
-        self.env['indexation.raw_material.lines'].search([('field_active', '=', False)]).unlink()
+        self.env['indexation.raw_material.lines'].search([('field_enable', '=', False)]).unlink()
         return {'type': 'ir.actions.act_window_close'}
 
     @api.multi

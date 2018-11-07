@@ -9,7 +9,8 @@ class PurchaseOrder(models.Model):
 
     @api.multi
     def button_done(self):
-        self.env['indexation.raw_material'].compute_indexation(lst_po=self)
+        for po in self:
+            self.env['indexation.raw_material'].compute_indexation(po=po)
         return super(PurchaseOrder, self).button_done()
 
     @api.multi

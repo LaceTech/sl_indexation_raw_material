@@ -11,6 +11,10 @@
                 <group name="first" position="after">
                     <group string="Indexation Raw Material">
                         <field name="enable_indexation_raw_material" attrs="{'invisible':[('type', '!=', 'normal')]}"/>
+                        <field name="average_indexation"
+                               attrs="{'invisible':[('enable_indexation_raw_material', '==', False)]}"/>
+                        <field name="indexation_raw_material_lines_ids"
+                               attrs="{'invisible':[('enable_indexation_raw_material', '==', False)]}"/>
                     </group>
                 </group>
             </field>
