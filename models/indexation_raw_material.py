@@ -85,10 +85,11 @@ class IndexationRawMaterial(models.Model):
         for product in lst_child_product:
             if product.weight != 0:
                 total_item_old_indexation += 1
-                sum_item_old_indexation += product.standard_price / product.weight
+                # Reverse the product indexation by adding the ratio of the uom
+                sum_item_old_indexation += (product.standard_price / product.weight) * product.uom_id.factor
 
             # Update new price
-            product.standard_price = product.weight * indexation
+            product.standard_price = product.weight * indexation * product.uom_id.factor
 
         old_indexation = 0
         if total_item_old_indexation:
@@ -148,9 +149,9 @@ class IndexationRawMaterial(models.Model):
                     continue
 
                 # TODO include tax?
-                # TODO use the same unit of measure
-                # TODO use the same weight
-                sum_price_unit_per_weight += order_line.price_unit / product_id.weight
+                # Ignore the number of item
+                # Reduce the product indexation by removing the ratio of the uom
+                sum_price_unit_per_weight += (order_line.price_unit / product_id.weight) * product_id.uom_id.factor_inv
                 total_product += 1
 
             if total_product:
