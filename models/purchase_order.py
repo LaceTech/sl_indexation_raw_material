@@ -20,3 +20,8 @@ class PurchaseOrder(models.Model):
     @api.multi
     def button_unlock(self):
         return super(PurchaseOrder, self).button_unlock()
+
+    @api.multi
+    def compute_indexation_raw_material_on_po(self, cxt):
+        for record in self.browse(cxt['active_ids']):
+            self.env['indexation.raw_material'].compute_indexation(po=record)

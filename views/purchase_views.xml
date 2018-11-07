@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Action button -->
+        <record id="action_compute_indexation_raw_material_on_po" model="ir.actions.server">
+            <field name="name">Compute indexation</field>
+            <field name="model_id" ref="model_purchase_order"/>
+            <field name="code">model.compute_indexation_raw_material_on_po(context)</field>
+        </record>
+
+    </data>
+</odoo>

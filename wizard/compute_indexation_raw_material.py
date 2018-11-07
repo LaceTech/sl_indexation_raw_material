@@ -3,7 +3,7 @@
 from odoo import api, fields, tools, models
 import logging
 import threading
-import random
+# import random
 
 _logger = logging.getLogger(__name__)
 
@@ -20,9 +20,14 @@ class IndexationRawMaterialComputeWizard(models.TransientModel):
             new_cr = self.pool.cursor()
             self = self.with_env(self.env(cr=new_cr))
 
-            for i in range(20):
-                self.env['indexation.raw_material.log.lines'].create({'message': "test"})
-                self.env['indexation.raw_material.lines'].create({'indexation_value': random.uniform(0.4, 10.2)})
+            _logger.warning("Not implemented.")
+            msg = {'message': "Not implemented - fct algo_indexation_raw_material_all in wizard Compute indexation.",
+                   'level': 3}
+            self.env['indexation.raw_material.log.lines'].create(msg)
+
+            # for i in range(20):
+            #     self.env['indexation.raw_material.log.lines'].create({'message': "test"})
+            #     self.env['indexation.raw_material.lines'].create({'indexation_value': random.uniform(0.4, 10.2)})
 
             new_cr.commit()
             new_cr.close()
