@@ -38,14 +38,26 @@ class IndexationRawMaterial(models.Model):
             _logger.warning(msg)
             return
 
+        # Create dictionary of category
+        dct_category_to_compute = self._generate_dct_to_compute(po,
+                                                                indexation_raw_material_line=
+                                                                indexation_raw_material_line)
+        if type(dct_category_to_compute) not in (dict, defaultdict):
+            return
+
+        # Compute dct_category
+        self._calcul_indexation(po, dct_category_to_compute, indexation_raw_material_line=indexation_raw_material_line)
+
+    @api.multi
+    def _generate_dct_to_compute(self, po, indexation_raw_material_line=None):
         dct_category_to_compute = defaultdict(list)
         # Fill dct_category_to_compute
         # Search order_line with product of right category to compute
         for element in po.order_line:
             product_id = element.product_id
-            categ_id = product_id.categ_id
-            if categ_id.enable_indexation_raw_material:
-                dct_category_to_compute[categ_id].append(element)
+            category_id = product_id.categ_id
+            if category_id.enable_indexation_raw_material:
+                dct_category_to_compute[category_id].append(element)
 
         if not dct_category_to_compute:
             # Create a warning
@@ -55,9 +67,11 @@ class IndexationRawMaterial(models.Model):
             self.env['indexation.raw_material.log.lines'].create(msg)
             _logger.warning(msg)
             return
+        return dct_category_to_compute
 
-        # Compute dct_category
-        for categ_id, lst_order_line in dct_category_to_compute.items():
+    @api.multi
+    def _calcul_indexation(self, po, dct_category_to_compute, indexation_raw_material_line=None):
+        for category_id, lst_order_line in dct_category_to_compute.items():
             sum_price_unit_per_weight = 0.
             total_product = 0
             # For each category, find unitary cost, divide by weight and sum all divide by nb article
@@ -86,12 +100,12 @@ class IndexationRawMaterial(models.Model):
                 # Try to find duplicate indexation_raw_material_line
                 if indexation_raw_material_line is None:
                     lst_indexation_raw_material_line = self.env['indexation.raw_material.lines'].search([
-                        ('purchase_id', '=', po.id), ('category_id', '=', categ_id.id)])
+                        ('purchase_id', '=', po.id), ('category_id', '=', category_id.id)])
                     # if list is empty, create a new one
                     if len(lst_indexation_raw_material_line) == 1:
                         # Update it
                         indexation_raw_material_line = lst_indexation_raw_material_line[0]
-                    else:
+                    elif len(lst_indexation_raw_material_line) > 1:
                         # Warning, duplicate of indexation_raw_material_line with same po
                         # Update the first one, but warning the user
                         indexation_raw_material_line = lst_indexation_raw_material_line[0]
@@ -100,12 +114,12 @@ class IndexationRawMaterial(models.Model):
                             index += 1
                             if index == 0:
                                 msg = {'message': "Duplicate indexation raw material line, check associated message.",
-                                       'category_id': categ_id.id, 'purchase_id': po.id, 'indexation_line': item.id,
+                                       'category_id': category_id.id, 'purchase_id': po.id, 'indexation_line': item.id,
                                        'level': 3}
                             else:
                                 item.field_enable = False
                                 msg = {'message': "Duplicate indexation raw material line, check associated message. "
-                                                  "DISABLED", 'category_id': categ_id.id, 'purchase_id': po.id,
+                                                  "DISABLED", 'category_id': category_id.id, 'purchase_id': po.id,
                                        'indexation_line': item.id, 'level': 3}
 
                             self.env['indexation.raw_material.log.lines'].create(msg)
@@ -118,7 +132,7 @@ class IndexationRawMaterial(models.Model):
 
                     # Update the indexation
                     indexation_raw_material_line.indexation_value = new_indexation
-                    indexation_raw_material_line.category_id = categ_id
+                    indexation_raw_material_line.category_id = category_id
                     indexation_raw_material_line.field_enable = True
 
                     indexation_id = indexation_raw_material_line
@@ -127,32 +141,32 @@ class IndexationRawMaterial(models.Model):
                         _logger.info(
                             "Update new indexation_raw_material_line. po: %s, "
                             "old indexation_value: %s, new indexation_value: %s, category: %s." % (
-                                po.id, old_value, new_indexation, categ_id.id))
+                                po.id, old_value, new_indexation, category_id.id))
                     else:
                         _logger.info("No update on indexation_raw_material_line. po: %s, indexation_value: %s, "
-                                     "category: %s." % (po.id, new_indexation, categ_id.id))
+                                     "category: %s." % (po.id, new_indexation, category_id.id))
 
                 else:
                     # Create a new indexation
                     indexation = {'purchase_id': po.id, 'indexation_value': new_indexation, 'field_enable': True,
-                                  'category_id': categ_id.id}
+                                  'category_id': category_id.id}
                     indexation_id = self.env['indexation.raw_material.lines'].create(indexation)
                     _logger.info(
                         "Create new indexation_raw_material_line. po: %s, indexation_value: %s, category: %s." % (
-                            po.id, new_indexation, categ_id.id))
+                            po.id, new_indexation, category_id.id))
 
                 # Create a log
-                msg = {'message': "Find %s indexation." % new_indexation, 'category_id': categ_id.id,
+                msg = {'message': "Find %s indexation." % new_indexation, 'category_id': category_id.id,
                        'indexation_line': indexation_id.id, 'purchase_id': po.id, 'level': 2}
                 self.env['indexation.raw_material.log.lines'].create(msg)
             else:
                 # Create a warning
                 msg = {'message': "Cannot compute indexation, item are empty. Check associated error.",
-                       'category_id': categ_id.id, 'purchase_id': po.id, 'level': 3}
+                       'category_id': category_id.id, 'purchase_id': po.id, 'level': 3}
                 self.env['indexation.raw_material.log.lines'].create(msg)
                 _logger.warning(msg)
 
     @api.multi
     def apply_indexation(self):
         """Update all product cost with last indexation"""
-        self.apply_indexation()
+        _logger.info("Apply indexation")
