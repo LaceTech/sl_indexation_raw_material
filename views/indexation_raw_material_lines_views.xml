@@ -11,6 +11,7 @@
                     <field name="create_date"/>
                     <field name="write_date"/>
                     <field name="write_uid"/>
+                    <field name="category_id"/>
                     <field name="purchase_id"/>
                     <field name="indexation_value"/>
                     <field name="field_active"/>
@@ -24,6 +25,7 @@
             <field name="arch" type="xml">
                 <form string="Indexation Raw Material line">
                     <group>
+                        <field name="category_id"/>
                         <field name="purchase_id"/>
                         <field name="indexation_value"/>
                         <field name="field_active"/>

@@ -14,6 +14,7 @@ class IndexationRawMaterialLogLines(models.Model):
     product_id = fields.Many2one('product.product', 'Product')
     category_id = fields.Many2one('product.category', 'Category')
     purchase_id = fields.Many2one('purchase.order', 'Purchase Order')
+    indexation_line = fields.Many2one('indexation.raw_material.lines', 'Indexation line')
     level = fields.Selection([
         (0, "Info"),
         (1, "Debug"),

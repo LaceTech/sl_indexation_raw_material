@@ -31,7 +31,6 @@
     'data': [
         # 'security/security.xml',
         'security/ir.model.access.csv',
-        'views/indexation_raw_material_views.xml',
         'views/indexation_raw_material_lines_views.xml',
         'views/indexation_raw_material_log_lines_views.xml',
         'views/product_views.xml',
