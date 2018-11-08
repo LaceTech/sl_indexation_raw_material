@@ -13,7 +13,8 @@ class ProductCategory(models.Model):
                                                     help="Only for normal product.category, "
                                                          "enable indexation raw material.")
     indexation_raw_material_lines_ids = fields.One2many(comodel_name="indexation.raw_material.lines",
-                                                        inverse_name="category_id")
+                                                        inverse_name="category_id",
+                                                        domain=[('field_enable', '=', True)])
     average_indexation = fields.Float(compute='average_indexation_raw_materials_ids')
 
     @api.depends('indexation_raw_material_lines_ids')

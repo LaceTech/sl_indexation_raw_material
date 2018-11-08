@@ -14,8 +14,7 @@
                         <field name="average_indexation"
                                attrs="{'invisible':[('enable_indexation_raw_material', '==', False)]}"/>
                         <field name="indexation_raw_material_lines_ids"
-                               attrs="{'invisible':[('enable_indexation_raw_material', '==', False)]}"
-                               domain="[('field_enable', '=', True)]"/>
+                               attrs="{'invisible':[('enable_indexation_raw_material', '==', False)]}"/>
                     </group>
                 </group>
             </field>
