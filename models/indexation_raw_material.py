@@ -156,6 +156,7 @@ class IndexationRawMaterial(models.Model):
 
             if total_product:
                 new_indexation = sum_price_unit_per_weight / total_product
+                _indexation_raw_material_line = None
 
                 # Try to find duplicate indexation_raw_material_line
                 if indexation_raw_material_line is None:
@@ -164,11 +165,11 @@ class IndexationRawMaterial(models.Model):
                     # if list is empty, create a new one
                     if len(lst_indexation_raw_material_line) == 1:
                         # Update it
-                        indexation_raw_material_line = lst_indexation_raw_material_line[0]
+                        _indexation_raw_material_line = lst_indexation_raw_material_line[0]
                     elif len(lst_indexation_raw_material_line) > 1:
                         # Warning, duplicate of indexation_raw_material_line with same po
                         # Update the first one, but warning the user
-                        indexation_raw_material_line = lst_indexation_raw_material_line[0]
+                        _indexation_raw_material_line = lst_indexation_raw_material_line[0]
                         index = -1
                         for item in lst_indexation_raw_material_line:
                             index += 1
@@ -184,19 +185,23 @@ class IndexationRawMaterial(models.Model):
 
                             self.env['indexation.raw_material.log.lines'].create(msg)
                             _logger.warning(msg)
+                else:
+                    _indexation_raw_material_line = indexation_raw_material_line
 
-                if indexation_raw_material_line:
+                if _indexation_raw_material_line:
+                    # Update it
                     # Check if value change
-                    old_indexation = indexation_raw_material_line.indexation_value
+                    old_indexation = _indexation_raw_material_line.indexation_value
                     has_update = not abs(new_indexation - old_indexation) < 0.00000001
 
                     # Update the indexation
-                    indexation_raw_material_line.indexation_value = new_indexation
-                    indexation_raw_material_line.category_id = category_id
-                    indexation_raw_material_line.field_enable = True
+                    _indexation_raw_material_line.indexation_value = new_indexation
+                    _indexation_raw_material_line.category_id = category_id
+                    _indexation_raw_material_line.field_enable = True
 
-                    indexation_id = indexation_raw_material_line
+                    indexation_id = _indexation_raw_material_line
 
+                    # Show to user if the indexation has difference
                     if has_update:
                         # Create a log
                         msg = {
@@ -224,6 +229,21 @@ class IndexationRawMaterial(models.Model):
                            'indexation_line': indexation_id.id, 'purchase_id': po.id, 'level': 2}
                     self.env['indexation.raw_material.log.lines'].create(msg)
                     _logger.info(msg)
+
+                # TODO hardcoded, use settings to set the max
+                # Max 5 elements, remove the 6 and more, the oldest
+                # Use the same list of indexation before
+                lst_indexation_raw_material_line = self.env['indexation.raw_material.lines'].search(
+                    [('category_id', '=', category_id.id), ('field_enable', '=', True)], order='write_date desc')
+                if len(lst_indexation_raw_material_line) > 5:
+                    for record in lst_indexation_raw_material_line[5:]:
+                        record.field_enable = False
+                        msg = {
+                            'message': 'Disable indexation because more than 5.',
+                            'category_id': category_id.id, 'indexation_line': indexation_id.id, 'purchase_id': po.id,
+                            'level': 2}
+                        self.env['indexation.raw_material.log.lines'].create(msg)
+                        _logger.info(msg)
             else:
                 # Create a warning
                 msg = {'message': "Cannot compute indexation, item are empty. Check associated error.",
