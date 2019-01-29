@@ -46,7 +46,9 @@ class IndexationRawMaterial(models.Model):
             return
 
         # Compute dct_category
-        self._calcul_indexation(po, dct_category_to_compute, indexation_raw_material_line=indexation_raw_material_line)
+        status_info = self._calcul_indexation(po, dct_category_to_compute,
+                                              indexation_raw_material_line=indexation_raw_material_line)
+        return status_info
 
     @api.multi
     def apply_indexation(self, category_id=None):
@@ -131,6 +133,7 @@ class IndexationRawMaterial(models.Model):
 
     @api.multi
     def _calcul_indexation(self, po, dct_category_to_compute, indexation_raw_material_line=None):
+        status_info = {}
         for category_id, lst_order_line in dct_category_to_compute.items():
             sum_price_unit_per_weight = 0.
             total_product_qty = 0
@@ -209,6 +212,9 @@ class IndexationRawMaterial(models.Model):
                             'level': 2}
                         self.env['indexation.raw_material.log.lines'].create(msg)
                         _logger.info(msg)
+
+                        status_info[po.id] = {category_id.id: {"new": new_indexation, "old": old_indexation,
+                                                               "indexation": indexation_id.id, "category": category_id}}
                     else:
                         # Create a log
                         msg = {
@@ -228,6 +234,9 @@ class IndexationRawMaterial(models.Model):
                            'indexation_line': indexation_id.id, 'purchase_id': po.id, 'level': 2}
                     self.env['indexation.raw_material.log.lines'].create(msg)
                     _logger.info(msg)
+
+                    status_info[po.id] = {category_id.id: {"new": new_indexation, "indexation": indexation_id.id,
+                                                           "category": category_id}}
 
                 # TODO hardcoded, use settings to set the max
                 # Max 5 elements, remove the 6 and more, the oldest
@@ -249,3 +258,4 @@ class IndexationRawMaterial(models.Model):
                        'category_id': category_id.id, 'purchase_id': po.id, 'level': 3}
                 self.env['indexation.raw_material.log.lines'].create(msg)
                 _logger.warning(msg)
+        return status_info
