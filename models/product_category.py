@@ -15,7 +15,7 @@ class ProductCategory(models.Model):
     indexation_raw_material_lines_ids = fields.One2many(comodel_name="indexation.raw_material.lines",
                                                         inverse_name="category_id",
                                                         domain=[('field_enable', '=', True)])
-    average_indexation = fields.Float(compute='average_indexation_raw_materials_ids')
+    average_indexation = fields.Float(compute='average_indexation_raw_materials_ids', digits=(16, 6))
 
     @api.depends('indexation_raw_material_lines_ids')
     def average_indexation_raw_materials_ids(self):

@@ -30,7 +30,7 @@ class IndexationRawMaterialLines(models.Model):
 
     purchase_id = fields.Many2one('purchase.order', 'Purchase Order')
     category_id = fields.Many2one('product.category', 'Category')
-    indexation_value = fields.Float('Indexation Value', default=0., required=True)
+    indexation_value = fields.Float('Indexation Value', default=0., required=True, digits=(16, 6))
     product_qty = fields.Float("Product Quantity", default=0., required=True)
     field_enable = fields.Boolean('Enable', default=True,
                                   help="Uncheck to disable an indexation value without deleting it.")
