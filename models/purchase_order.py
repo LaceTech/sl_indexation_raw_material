@@ -56,5 +56,9 @@ class PurchaseOrder(models.Model):
                             cat_dct_value["old"], cat_dct_value["new"])
                     msg += "<li>" + _("Category id") + ": %s</li>" % cat_id
                     msg += "</ul>"
+
+                    # Auto apply indexation
+                    category_id = cat_dct_value["category"]
+                    self.env['indexation.raw_material'].apply_indexation(category_id=category_id)
                 if msg:
                     po.message_post(body=msg)

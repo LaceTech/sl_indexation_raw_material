@@ -18,6 +18,7 @@ class IndexationRawMaterialComputeWizard(models.TransientModel):
         # threaded_compute = threading.Thread(target=self._compute_indexation_raw_material, args=())
         # threaded_compute.start()
         self._compute_indexation_raw_material()
+        self._apply_indexation_raw_material()
         return {'type': 'ir.actions.act_window_close'}
 
     @api.multi

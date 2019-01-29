@@ -28,6 +28,11 @@ class IndexationRawMaterialLines(models.Model):
             self.env['indexation.raw_material'].compute_indexation(po=record.purchase_id,
                                                                    indexation_raw_material_line=record)
 
+        # apply indexation
+        lst_category = self.env['product.category'].search([('enable_indexation_raw_material', '=', True)])
+        for category in lst_category:
+            self.env['indexation.raw_material'].apply_indexation(category)
+
     purchase_id = fields.Many2one('purchase.order', 'Purchase Order')
     category_id = fields.Many2one('product.category', 'Category')
     indexation_value = fields.Float('Indexation Value', default=0., required=True, digits=(16, 6))

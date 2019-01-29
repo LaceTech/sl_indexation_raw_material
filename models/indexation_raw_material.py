@@ -16,10 +16,10 @@ class IndexationRawMaterial(models.Model):
     _name = 'indexation.raw_material'
     _description = 'Indexation data about raw material'
 
-    @api.multi
-    def compute_and_apply_indexation(self):
-        self.compute_indexation()
-        self.apply_indexation()
+    # @api.multi
+    # def compute_and_apply_indexation(self):
+    #     self.compute_indexation()
+    #     self.apply_indexation()
 
     @api.multi
     def compute_indexation(self, po=None, indexation_raw_material_line=None):
