@@ -82,20 +82,20 @@ class IndexationRawMaterial(models.Model):
             [('categ_id', '=', category_id.id), ('active', '=', True)])
 
         # For information, find last indexation to understand the new difference
-        total_item_old_indexation = 0
-        sum_item_old_indexation = 0
+        # total_item_old_indexation = 0
+        # sum_item_old_indexation = 0
         for product in lst_child_product:
-            if product.weight != 0:
-                total_item_old_indexation += 1
-                # Reverse the product indexation by adding the ratio of the uom
-                sum_item_old_indexation += (product.standard_price / product.weight) * product.uom_id.factor
+            # if product.weight != 0:
+            #     # total_item_old_indexation += 1
+            #     # Reverse the product indexation by adding the ratio of the uom
+            #     sum_item_old_indexation += (product.standard_price / product.weight) * product.uom_id.factor
 
             # Update new price
             product.standard_price = product.weight * indexation * product.uom_id.factor
 
-        old_indexation = 0
-        if total_item_old_indexation:
-            old_indexation = sum_item_old_indexation / total_item_old_indexation
+        # old_indexation = 0
+        # if total_item_old_indexation:
+        #     old_indexation = sum_item_old_indexation / total_item_old_indexation
 
         if not lst_child_product:
             # Create a warning
@@ -105,8 +105,9 @@ class IndexationRawMaterial(models.Model):
             _logger.warning(msg)
             return
         else:
-            msg = {'message': "Apply %s indexation on %s product of category, old indexation %s." % (
-                indexation, total_item_old_indexation, old_indexation), 'category_id': category_id.id, 'level': 2}
+            msg = {'message': "Apply %s indexation." % indexation, 'category_id': category_id.id, 'level': 2}
+            # msg = {'message': "Apply %s indexation on %s product of category, old indexation %s." % (
+            #     indexation, total_item_old_indexation, old_indexation), 'category_id': category_id.id, 'level': 2}
             self.env['indexation.raw_material.log.lines'].create(msg)
             _logger.info(msg)
 
