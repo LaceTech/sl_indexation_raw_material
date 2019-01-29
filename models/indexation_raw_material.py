@@ -133,9 +133,8 @@ class IndexationRawMaterial(models.Model):
     def _calcul_indexation(self, po, dct_category_to_compute, indexation_raw_material_line=None):
         for category_id, lst_order_line in dct_category_to_compute.items():
             sum_price_unit_per_weight = 0.
-            total_product = 0
+            total_product_qty = 0
             # For each category, find unitary cost, divide by weight and sum all divide by nb article
-            # Update indexation with last 4 results of the same category
             for order_line in lst_order_line:
                 product_id = order_line.product_id
                 # Validation
@@ -148,14 +147,13 @@ class IndexationRawMaterial(models.Model):
                     _logger.error(msg)
                     continue
 
-                # TODO include tax?
-                # Ignore the number of item
                 # Reduce the product indexation by removing the ratio of the uom
-                sum_price_unit_per_weight += (order_line.price_unit / product_id.weight) * product_id.uom_id.factor_inv
-                total_product += 1
+                sum_price_unit_per_weight += (order_line.price_unit / product_id.weight) * \
+                                             product_id.uom_id.factor_inv * order_line.product_qty
+                total_product_qty += order_line.product_qty
 
-            if total_product:
-                new_indexation = sum_price_unit_per_weight / total_product
+            if total_product_qty:
+                new_indexation = sum_price_unit_per_weight / total_product_qty
                 _indexation_raw_material_line = None
 
                 # Try to find duplicate indexation_raw_material_line
@@ -198,6 +196,7 @@ class IndexationRawMaterial(models.Model):
                     _indexation_raw_material_line.indexation_value = new_indexation
                     _indexation_raw_material_line.category_id = category_id
                     _indexation_raw_material_line.field_enable = True
+                    _indexation_raw_material_line.product_qty = total_product_qty
 
                     indexation_id = _indexation_raw_material_line
 
@@ -222,7 +221,7 @@ class IndexationRawMaterial(models.Model):
                 else:
                     # Create a new indexation
                     indexation = {'purchase_id': po.id, 'indexation_value': new_indexation, 'field_enable': True,
-                                  'category_id': category_id.id}
+                                  'category_id': category_id.id, 'product_qty': total_product_qty}
                     indexation_id = self.env['indexation.raw_material.lines'].create(indexation)
                     # Create a log
                     msg = {'message': 'Create new indexation: %s' % new_indexation, 'category_id': category_id.id,

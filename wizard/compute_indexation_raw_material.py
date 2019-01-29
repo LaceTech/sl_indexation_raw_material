@@ -35,10 +35,25 @@ class IndexationRawMaterialComputeWizard(models.TransientModel):
             new_cr = self.pool.cursor()
             self = self.with_env(self.env(cr=new_cr))
 
-            _logger.warning("Not implemented.")
-            msg = {'message': "Not implemented - fct algo_indexation_raw_material_all in wizard Compute indexation.",
-                   'level': 3}
-            self.env['indexation.raw_material.log.lines'].create(msg)
+            # Find all PO with category with indexation enable
+            for po in self.env['purchase.order'].search([], order='id asc'):
+                do_compute_indexation_po = False
+                for product in po.product_id:
+                    if product.categ_id.enable_indexation_raw_material:
+                        do_compute_indexation_po = True
+                        break
+
+                if do_compute_indexation_po:
+                    msg_str = "algo_indexation_raw_material_all in wizard Compute indexation compute po %s." % po.name
+                    _logger.info(msg_str)
+                    msg = {'message': msg_str, 'level': 0}
+                    self.env['indexation.raw_material.log.lines'].create(msg)
+
+                    self.env['indexation.raw_material'].compute_indexation(po=po)
+            # _logger.warning("Not implemented.")
+            # msg = {'message': "Not implemented - fct algo_indexation_raw_material_all in wizard Compute indexation.",
+            #        'level': 3}
+            # self.env['indexation.raw_material.log.lines'].create(msg)
 
             # for i in range(20):
             #     self.env['indexation.raw_material.log.lines'].create({'message': "test"})

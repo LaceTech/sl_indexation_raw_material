@@ -24,17 +24,19 @@ class ProductCategory(models.Model):
                 continue
 
             # Sum all indexation if active
-            len_indexation = 0
             sum_indexation = 0.
+            max_product_qty = 0.
+
             for indexation_line in record.indexation_raw_material_lines_ids:
                 if not indexation_line.field_enable:
                     continue
-                len_indexation += 1
-                sum_indexation += indexation_line.indexation_value
+                # Apply indexation with product qty
+                sum_indexation += indexation_line.indexation_value * indexation_line.product_qty
+                max_product_qty += indexation_line.product_qty
 
             # Fill value, protect from divide by zero
-            if len_indexation:
-                record.average_indexation = sum_indexation / len_indexation
+            if max_product_qty:
+                record.average_indexation = sum_indexation / max_product_qty
             else:
                 record.average_indexation = 0.
 
