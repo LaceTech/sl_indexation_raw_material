@@ -14,12 +14,23 @@ class PurchaseOrder(models.Model):
         return super(PurchaseOrder, self).button_done()
 
     @api.multi
-    def button_confirm(self):
-        return super(PurchaseOrder, self).button_confirm()
+    def write(self, values):
+        status = super(PurchaseOrder, self).write(values)
+        if status:
+            for po in self:
+                if po.state in ["purchase", "done"]:
+                    self.env['indexation.raw_material'].compute_indexation(po=po)
+        return status
 
     @api.multi
-    def button_unlock(self):
-        return super(PurchaseOrder, self).button_unlock()
+    def button_confirm(self):
+        for po in self:
+            self.env['indexation.raw_material'].compute_indexation(po=po)
+        return super(PurchaseOrder, self).button_confirm()
+
+    # @api.multi
+    # def button_unlock(self):
+    #     return super(PurchaseOrder, self).button_unlock()
 
     @api.multi
     def compute_indexation_raw_material_on_po(self, cxt):
