@@ -9,7 +9,7 @@
             <field name="arch" type="xml">
                 <form string="Clean indexation raw material">
                     <p>
-                        Clean indexation and log of raw material.
+                        Clean indexation and log of raw material. This will not revert product standard price!
                     </p>
                     <footer>
                         <button name="remove_disabled_indexation" string="Remove disabled indexation" type="object"

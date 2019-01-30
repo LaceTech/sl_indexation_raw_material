@@ -241,16 +241,21 @@ class IndexationRawMaterial(models.Model):
 
                 # TODO hardcoded, use settings to set the max
                 # Max 5 elements, remove the 6 and more, the oldest
+                max_element = 5
                 # Use the same list of indexation before
                 lst_indexation_raw_material_line = self.env['indexation.raw_material.lines'].search(
-                    [('category_id', '=', category_id.id), ('field_enable', '=', True)], order='write_date desc')
-                if len(lst_indexation_raw_material_line) > 5:
-                    for record in lst_indexation_raw_material_line[5:]:
+                    [('category_id', '=', category_id.id), ('field_enable', '=', True)],
+                    order='purchase_write_date DESC')
+                if len(lst_indexation_raw_material_line) > max_element:
+                    # TODO bug the order in search not work... Manually sort it
+                    lst_record = sorted(lst_indexation_raw_material_line, key=lambda obj: obj.purchase_id.write_date,
+                                        reverse=True)
+                    for record in lst_record[max_element:]:
                         record.field_enable = False
                         msg = {
-                            'message': 'Disable indexation because more than 5.',
-                            'category_id': category_id.id, 'indexation_line': indexation_id.id, 'purchase_id': po.id,
-                            'level': 2}
+                            'message': 'Disable indexation because more than %s.' % max_element,
+                            'category_id': record.category_id.id, 'indexation_line': record.id,
+                            'purchase_id': record.purchase_id.id, 'level': 3}
                         self.env['indexation.raw_material.log.lines'].create(msg)
                         _logger.info(msg)
             else:

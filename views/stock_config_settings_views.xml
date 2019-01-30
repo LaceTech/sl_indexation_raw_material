@@ -3,6 +3,7 @@
     <data>
 
         <!-- component into view_stock_config_settings -->
+        <!--
         <record id="view_stock_config_settings_inherit_indexation_raw_material" model="ir.ui.view">
             <field name="name">stock.config.settings.inherit.indexation.raw.material</field>
             <field name="model">stock.config.settings</field>
@@ -15,6 +16,6 @@
                 </xpath>
             </field>
         </record>
-
+        -->
     </data>
 </odoo>

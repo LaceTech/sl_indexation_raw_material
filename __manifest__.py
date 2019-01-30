@@ -19,9 +19,9 @@
 
     'author': "Mathieu Benoit",
     'company': "Mathben informatique",
-    'website': "http://mathieubenoit.ca",
+    'website': "http://mathben.tech",
     'category': 'Warehouse',
-    'version': '0.1',
+    'version': '0.2',
     'license': 'LGPL-3',
 
     # any module necessary for this one to work correctly

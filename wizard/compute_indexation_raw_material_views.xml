@@ -9,12 +9,14 @@
             <field name="arch" type="xml">
                 <form string="Compute indexation raw material">
                     <p>
-                        Compute all indexation raw material in the background.
+                        Compute all indexation raw material in the background. Update all product standard price from category with indexation enabled.
                     </p>
                     <footer>
-                        <button name="compute_indexation_raw_material" string="Compute indexation" type="object"
+                        <!--<button name="compute_indexation_raw_material" string="Compute indexation" type="object"
+                                class="btn-primary"/>-->
+                        <button name="compute_indexation_raw_material" string="Compute and apply" type="object"
                                 class="btn-primary"/>
-                        <button name="apply_indexation_raw_material" string="Apply indexation" type="object"
+                        <button name="apply_indexation_raw_material" string="Apply" type="object"
                                 class="btn-primary"/>
                         <button string="Cancel" class="btn-default" special="cancel"/>
                     </footer>

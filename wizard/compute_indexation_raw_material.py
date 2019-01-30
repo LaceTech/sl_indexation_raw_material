@@ -2,7 +2,7 @@
 
 from odoo import api, fields, tools, models
 import logging
-import threading
+# import threading
 
 # import random
 
