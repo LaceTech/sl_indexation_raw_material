@@ -39,8 +39,8 @@ class IndexationRawMaterialComputeWizard(models.TransientModel):
             # Find all PO with category with indexation enable
             for po in self.env['purchase.order'].search([], order='id asc'):
                 do_compute_indexation_po = False
-                for product in po.product_id:
-                    if product.categ_id.enable_indexation_raw_material:
+                for order_line in po.order_line:
+                    if order_line.product_id.categ_id.enable_indexation_raw_material:
                         do_compute_indexation_po = True
                         break
 
