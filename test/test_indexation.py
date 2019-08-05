@@ -11,7 +11,6 @@ class TestIndexation(TransactionCase):
         self.product_p = []
 
     def setUp(self):
-        # TODO : Validate if this function is necessary
         super(TestIndexation, self).setUp()
         self.partner_id = []
         self.category_c = []
@@ -170,7 +169,7 @@ class TestIndexation(TransactionCase):
 
     def test_indexation_multiple(self):
         self.setEnviroment(2, 5, 3)
-        print("Multple Variables")
+        print("Multiple Variables")
         print("Creating a Purchase order PO and Associate the product P")
 
         for c in self.category_c:
